@@ -1,0 +1,97 @@
+task: detection
+
+model: DTWDet
+criterion: SetCriterion
+postprocessor: DTWDetPostProcessor
+
+
+DTWDet:
+  backbone: PResNet
+  encoder: HybridEncoder
+  decoder: DTWDetTransformer
+  multi_scale: [800]
+
+PResNet:
+  depth: 50
+  variant: d
+  freeze_at: 0
+  return_idx: [0, 1, 2]
+  num_stages: 4
+  freeze_norm: True
+  pretrained: True 
+
+HybridEncoder:
+  # 基本参数
+  in_channels: [256, 512, 1024]
+  feat_strides: [4, 8, 16]
+  hidden_dim: 256
+  act: 'silu'
+  eval_spatial_size: [800, 800]
+  # FADE
+  dist_detach: False  # 截断分布图预测分支的梯度
+  # 基本注意力参数
+  nhead: 8
+  dim_feedforward: 1024
+  dropout: 0.
+  enc_act: 'gelu'
+  pe_temperature: 10000
+  # DGE
+  DGE: True  # 分布图引导的增强
+  # CDPC
+  cdpc_n: 3
+  # SIF : agent-att 参数
+  windows_size: 10
+  agent_pos_mode: 'deformable_offset'
+  mask_mod: 'hard'
+  hard_thrd: 0.5
+  # DEF
+  dis_map_filt: False  # 在差分反馈中使用分布图做门控
+
+DTWDetTransformer:
+  feat_channels: [256, 256, 256]
+  feat_strides: [4, 8, 16]
+  hidden_dim: 256
+  num_levels: 3
+
+  num_decoder_layers: 6
+  num_denoising: 100
+  
+  eval_idx: -1
+  eval_spatial_size: [800, 800]
+  # =============================
+  num_queries: 500
+  min_num_select: 300
+  max_num_select: 600
+
+
+use_focal_loss: True
+
+#DTWDetPostProcessor:
+#  num_top_queries: 300
+
+
+SetCriterion:
+  weight_dict: {loss_vfl: 1, loss_bbox: 5, loss_giou: 2, loss_FADE_num: 1, loss_FADE_MSE: 1, loss_FADE_DICE: 0.1}
+#  weight_dict: {loss_vfl: 1, loss_bbox: 5, loss_giou: 2, loss_FADE_num: 1, loss_FADE_Focal: 1}
+#  weight_dict: {loss_vfl: 1, loss_bbox: 5, loss_giou: 2, loss_FADE_num: 1, loss_FADE_EdgeQFL: 1}
+  losses: ['vfl', 'boxes', ]
+  alpha: 0.75
+  gamma: 2.0
+#  # gauss focal 参数
+#  gauss_focal_alpha: 2
+#  gauss_focal_beta: 4
+#  allowance: 0.001
+#  # edge_relax_qfl 参数
+#  edge_qfl_beta: 2
+#  edge_qfl_gamma: 2
+#  edge_qfl_thrd: 0.5
+
+  matcher:
+    type: HungarianMatcher
+    weight_dict: {cost_class: 2, cost_bbox: 5, cost_giou: 2}
+    # use_focal_loss: True 
+    alpha: 0.25
+    gamma: 2.0
+
+
+

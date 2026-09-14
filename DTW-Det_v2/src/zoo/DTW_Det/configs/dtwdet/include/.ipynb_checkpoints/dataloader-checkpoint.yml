@@ -1,0 +1,49 @@
+# num_classes: 91
+# remap_mscoco_category: True
+
+train_dataloader: 
+  dataset: 
+    return_masks: False
+    is_train: True
+    transforms:
+      ops:
+        - {type: RandomPhotometricDistort, p: 0.5}
+        - {type: RandomZoomOut, fill: 0}
+        - {type: RandomIoUCrop, p: 0.8}
+        - {type: SanitizeBoundingBoxes, min_size: 1}
+        - {type: RandomHorizontalFlip}
+        - {type: Resize, size: [800, 800], }
+        - {type: SanitizeBoundingBoxes, min_size: 1}
+        - {type: ConvertPILImage, dtype: 'float32', scale: True}
+        - {type: ConvertBoxes, fmt: 'cxcywh', normalize: True}
+        - {type: GenerateGaussDistribution, img_size: [800, 800], overlay: False, gauss_norm: False}
+      policy:
+        name: stop_epoch
+        epoch: 108
+        ops: ['RandomPhotometricDistort', 'RandomZoomOut', 'RandomIoUCrop']
+
+  collate_fn:
+    type: BatchImageCollateFunction
+    base_size: 800
+    base_size_repeat: 2
+    stop_epoch: 108
+    ema_restart_decay: 0.9999
+    
+  shuffle: True
+  batch_size: 2
+  num_workers: 4
+
+
+val_dataloader:
+  dataset: 
+    is_train: False
+    transforms:
+      ops:
+        - {type: Resize, size: [800, 800], }
+        - {type: ConvertPILImage, dtype: 'float32', scale: True}
+  shuffle: False
+  batch_size: 4
+  num_workers: 4
+  collate_fn:
+    type: BatchImageCollateFunction
+  # collate_fn: default_collate_fn

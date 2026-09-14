@@ -1,0 +1,3 @@
+from .coco_eval_visdrone import VisdroneCocoEvaluator
+
+from .coco_eval_aitod import AitodCocoEvaluator

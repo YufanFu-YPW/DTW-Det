@@ -1,0 +1,25 @@
+__include__: [
+  '../dataset/visdrone_detection.yml',
+  '../runtime.yml',
+  './include/dataloader.yml',
+  './include/optimizer.yml',
+  './include/dtwdet_regnetv2.yml',
+]
+
+checkpoint_step: 12
+
+output_dir: ./output/dtwdet_regnetv2_visdrone_DTW_Det
+
+# description: 'window size = 5'
+
+# # # ====================================
+# HybridEncoder:
+#   # DGE: False  # 分布图引导的增强
+#   # agent_pos_mode: 'attention_weighted'
+#   windows_size: 5
+
+
+
+# val_dataloader:
+#   dataset:
+#     ann_file: /home1/fyf/DET/Datasets/VisDrone/Anno2/VisDrone2019-DET_val_coco.json

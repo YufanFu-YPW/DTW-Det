@@ -1,0 +1,38 @@
+task: detection
+
+num_classes: 8
+remap_mscoco_category: True
+
+evaluator: AitodCocoEvaluator
+
+train_dataloader: 
+  type: DataLoader
+  dataset: 
+    type: CocoDetection
+    img_folder: /hy-tmp/Datasets/AI-TOD/trainval/images/
+    ann_file: /hy-tmp/Datasets/AI-TOD/annotations/aitod_trainval_v1.json
+    transforms:
+      type: Compose
+      ops: ~
+  shuffle: True
+  batch_size: 8
+  num_workers: 2
+  drop_last: True 
+
+
+val_dataloader:
+  type: DataLoader
+  dataset: 
+    type: CocoDetection
+    img_folder: /hy-tmp/Datasets/AI-TOD/trainval/images/
+    ann_file: /hy-tmp/Datasets/AI-TOD/annotations/aitod_val_v1_100.json
+    # img_folder: /hy-tmp/Datasets/AI-TOD/test/images/
+    # ann_file: /hy-tmp/Datasets/AI-TOD/annotations/aitod_test_v1.json
+    transforms:
+      type: Compose
+      ops: ~ 
+
+  shuffle: False
+  batch_size: 8
+  num_workers: 2
+  drop_last: False

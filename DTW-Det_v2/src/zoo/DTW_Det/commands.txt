@@ -1,0 +1,11 @@
+
+
+# window size = 5 
+CUDA_VISIBLE_DEVICES=0,1 torchrun --nproc_per_node=2 tools/train.py -c src/zoo/DTW_Det/configs/dtwdet/dtwdet_r50vd_6x_visdrone.yml --seed 318 2>&1 | tee ./output/dtwdet_r50vd_6x_visdrone_DTW_Det_win5/train_log.txt
+
+
+# aitodv1
+CUDA_VISIBLE_DEVICES=0,1 torchrun --nproc_per_node=2 tools/train.py -c src/zoo/DTW_Det/configs/dtwdet/dtwdet_r50vd_6x_aitod.yml --seed 318 2>&1 | tee ./output/dtwdet_r50vd_6x_aitod_DTW_Det/train_log.txt
+
+
+

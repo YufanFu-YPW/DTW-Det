@@ -1,0 +1,14 @@
+__include__: [
+  '../dataset/visdrone_detection.yml',
+  '../runtime.yml',
+  './include/dataloader.yml',
+  './include/optimizer.yml',
+  './include/dtwdet_r50vd.yml',
+]
+
+checkpoint_step: 12
+
+output_dir: ./output/dtwdet_r50vd_6x_visdrone_DTW_Det
+
+description: ' '
+

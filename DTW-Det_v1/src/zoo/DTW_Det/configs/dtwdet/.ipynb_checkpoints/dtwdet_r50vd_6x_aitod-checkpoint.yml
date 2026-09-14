@@ -1,0 +1,37 @@
+__include__: [
+  '../dataset/aitod_detection.yml',
+  '../runtime.yml',
+  './include/dataloader.yml',
+  './include/optimizer.yml',
+  './include/dtwdet_r50vd.yml',
+]
+
+checkpoint_step: 12
+
+output_dir: ./output/dtwdet_r50vd_6x_aitod_DTW_Det
+
+description: 'AI-TODv1'
+
+DTWDetTransformer:
+  num_queries: 1500
+  min_num_select: 1000
+  max_num_select: 1500
+
+
+# find_unused_parameters: True 
+
+train_dataloader: 
+  batch_size: 2
+  num_workers: 4
+
+# val_dataloader:
+#   batch_size: 8
+#   num_workers: 8
+
+# 测试
+val_dataloader:
+  dataset: 
+    img_folder: /hy-tmp/Datasets/AI-TOD/test/images/
+    ann_file: /hy-tmp/Datasets/AI-TOD/annotations/aitod_test_v1.json
+  batch_size: 16
+  num_workers: 4
